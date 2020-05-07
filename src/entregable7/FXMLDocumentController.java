@@ -50,9 +50,11 @@ public class FXMLDocumentController implements Initializable {
     javafx.util.Duration dr = new javafx.util.Duration(0.0);
     @FXML
     private Button btnResetear;
-    @FXML
-    private Label lblPausado;
     String pausadoEn = "";
+    @FXML
+    private Label lblEstado;
+    @FXML
+    private Label lblParado;
     
     
     @Override
@@ -81,7 +83,7 @@ public class FXMLDocumentController implements Initializable {
                                 minutos = calendario.get(Calendar.MINUTE),
                                 segundos = calendario.get(Calendar.SECOND)
                             ));
-                            pausadoEn = "Pausado en: " + (String.format("%02d:%02d:%02d",
+                            pausadoEn = (String.format("%02d:%02d:%02d",
                                 horas = calendario.get(Calendar.HOUR_OF_DAY),
                                 minutos = calendario.get(Calendar.MINUTE),
                                 segundos = calendario.get(Calendar.SECOND)
@@ -106,23 +108,33 @@ public class FXMLDocumentController implements Initializable {
         lblHora.textProperty().bind(service.valueProperty());
     
         btnMostrar.setOnAction(event -> {
+            lblEstado.setText("Funcionando.");
+            
+            lblParado.setVisible(false);
             btnMostrar.setVisible(false);
-            lblPausado.setVisible(false);
             btnParar.setVisible(true);
+            
             service.start();
         });
         
         btnParar.setOnAction(event -> {
+            lblEstado.setText("Parado en:");
+            
+            lblParado.setVisible(false);
             btnResetear.setVisible(true);
             btnParar.setVisible(false);
+            
             service.cancel();
         });
         
         btnResetear.setOnAction(event -> {
+            lblEstado.setText("Parado en:");
+            
+            lblParado.setVisible(true);
             btnMostrar.setVisible(true);
             btnResetear.setVisible(false);
-            lblPausado.setVisible(true);
-            lblPausado.setText("00:00:00");
+            lblParado.setText(pausadoEn);
+            
             service.reset();
         });
 
