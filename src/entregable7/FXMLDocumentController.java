@@ -47,14 +47,8 @@ public class FXMLDocumentController implements Initializable {
     
     int horas, minutos, segundos;
     Calendar calendario;
-    javafx.util.Duration dr = new javafx.util.Duration(0.0);
-    @FXML
-    private Button btnResetear;
-    String pausadoEn = "";
     @FXML
     private Label lblEstado;
-    @FXML
-    private Label lblParado;
     
     
     @Override
@@ -83,11 +77,6 @@ public class FXMLDocumentController implements Initializable {
                                 minutos = calendario.get(Calendar.MINUTE),
                                 segundos = calendario.get(Calendar.SECOND)
                             ));
-                            pausadoEn = (String.format("%02d:%02d:%02d",
-                                horas = calendario.get(Calendar.HOUR_OF_DAY),
-                                minutos = calendario.get(Calendar.MINUTE),
-                                segundos = calendario.get(Calendar.SECOND)
-                            ));
                             Thread.sleep(1);
                         }
                     }
@@ -101,44 +90,29 @@ public class FXMLDocumentController implements Initializable {
             }
         };
         
-        btnMostrar.setVisible(true);
-        btnResetear.setVisible(false);
-        btnParar.setVisible(false);
-
+        btnParar.setDisable(true);
         lblHora.textProperty().bind(service.valueProperty());
     
         btnMostrar.setOnAction(event -> {
+            service.reset();
             lblEstado.setText("Funcionando.");
-            
-            lblParado.setVisible(false);
-            btnMostrar.setVisible(false);
-            btnParar.setVisible(true);
-            
+
+            btnMostrar.setDisable(true);
+            btnParar.setDisable(false);
+
             service.start();
         });
         
         btnParar.setOnAction(event -> {
             lblEstado.setText("Parado en:");
             
-            lblParado.setVisible(false);
-            btnResetear.setVisible(true);
-            btnParar.setVisible(false);
+            btnMostrar.setDisable(false);
+            btnParar.setDisable(true);
             
             service.cancel();
         });
         
-        btnResetear.setOnAction(event -> {
-            lblEstado.setText("Parado en:");
-            
-            lblParado.setVisible(true);
-            btnMostrar.setVisible(true);
-            btnResetear.setVisible(false);
-            lblParado.setText(pausadoEn);
-            
-            service.reset();
-        });
-
-//        btnResetear.visibleProperty().bind(service.runningProperty());
+//        btnMostrar.visibleProperty().bind(service.runningProperty());
     }  
 
         
@@ -151,7 +125,4 @@ public class FXMLDocumentController implements Initializable {
     private void pararHora(ActionEvent event) {
     }
 
-    @FXML
-    private void reiniciarHora(ActionEvent event) {
-    }
 }
