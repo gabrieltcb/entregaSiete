@@ -21,6 +21,8 @@ public class Entregable7 extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         
+        stage.setTitle("Reloj Digital");
+        stage.setResizable(false);
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
