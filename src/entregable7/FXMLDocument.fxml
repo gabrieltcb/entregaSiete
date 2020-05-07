@@ -8,7 +8,7 @@
    <children>
       <Button fx:id="btnMostrar" layoutX="88.0" layoutY="182.0" mnemonicParsing="false" onAction="#mostrarHora" text="Mostrar" />
       <Button fx:id="btnParar" layoutX="263.0" layoutY="182.0" mnemonicParsing="false" onAction="#pararHora" prefHeight="31.0" prefWidth="65.0" text="Parar" />
-      <Label fx:id="labelHora" alignment="CENTER" contentDisplay="CENTER" layoutX="108.0" layoutY="63.0" prefHeight="71.0" prefWidth="194.0" text="0" />
-      <Label fx:id="testLabel" layoutX="99.0" layoutY="124.0" text="Label" />
+      <Label fx:id="lblHora" alignment="CENTER" contentDisplay="CENTER" layoutX="108.0" layoutY="63.0" prefHeight="71.0" prefWidth="194.0" text="0" />
+      <Label fx:id="lblTestHora" layoutX="99.0" layoutY="124.0" text="0" />
    </children>
 </AnchorPane>

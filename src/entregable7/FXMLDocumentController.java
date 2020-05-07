@@ -7,14 +7,15 @@ package entregable7;
 
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.dateTime;
 import java.net.URL;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,6 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  *
@@ -38,38 +40,72 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button btnParar;
     @FXML
-    private Label labelHora;
+    private Label lblHora;
     @FXML
-    private Label testLabel;
+    private Label lblTestHora;
+    
+    int horas, minutos, segundos;
+    Calendar calendario;
+    javafx.util.Duration dr = new javafx.util.Duration(0.0);
     
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-    }    
-    
-//    https://stackoverflow.com/questions/13246211/javafx-how-to-get-stage-from-controller-during-initialization/30910015
-//    https://stackoverflow.com/questions/29729987/javafx-need-help-seting-stage-upon-initialize
-//    https://stackoverflow.com/questions/34809447/disable-maximize-button-and-resizing-window-in-javafx/47612391
-    
-//    public void start(Stage primaryStage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("views/homePage.fxml"));
-//        primaryStage.setTitle("Resizing");
-//        primaryStage.setScene(new Scene(root, 409, 281));
-//        primaryStage.setResizable(false);
-//        primaryStage.show();
-//    }
-    
+        calendario = Calendar.getInstance();
+        horas = calendario.get(Calendar.HOUR_OF_DAY);
+        minutos = calendario.get(Calendar.MINUTE);
+        segundos = calendario.get(Calendar.SECOND);
+        
+    }  
     
     @FXML
     private void mostrarHora(ActionEvent event) {
-        timer.start();
+        actualizarReloj();
+//        timer.start();
+        ejecutaReloj();
     }
 
     @FXML
     private void pararHora(ActionEvent event) {
         timer.stop();
     }
+    
+    private void actualizarReloj(){
+        calendario = Calendar.getInstance();
+        horas = calendario.get(Calendar.HOUR_OF_DAY);
+        minutos = calendario.get(Calendar.MINUTE);
+        segundos = calendario.get(Calendar.SECOND);
+        
+    }
+    
+    private void ejecutaReloj() {
+        Timeline lineaTiempo = new Timeline();
+        Timeline lineaSecundaria = new Timeline();
+        lineaSecundaria.setCycleCount(Timeline.INDEFINITE);
+
+        KeyFrame keyPrimario = new KeyFrame(
+                new Duration(1000 - calendario.get(Calendar.MILLISECOND) % 1000),
+                (event) -> {
+                    actualizarReloj();
+                    lineaSecundaria.play();
+                }
+        );
+        KeyFrame keySecundario = new KeyFrame(
+                Duration.seconds(1),
+                (event) -> {
+                    actualizarReloj();
+                }
+        );
+        lineaTiempo.getKeyFrames().add(keyPrimario);
+        lineaSecundaria.getKeyFrames().add(keySecundario);
+        lineaTiempo.play();
+        lineaTiempo.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new KeyValue(lblHora.textProperty(), "1")));
+    }
+
+//    https://stackoverflow.com/questions/13246211/javafx-how-to-get-stage-from-controller-during-initialization/30910015
+//    https://stackoverflow.com/questions/29729987/javafx-need-help-seting-stage-upon-initialize
+//    https://stackoverflow.com/questions/34809447/disable-maximize-button-and-resizing-window-in-javafx/47612391
     
     AnimationTimer timer = new AnimationTimer() {
         private long timestamp;
@@ -105,8 +141,8 @@ public class FXMLDocumentController implements Initializable {
                 long deltaT = (newTime - timestamp) / 1000;
                 time += deltaT;
                 timestamp += 1000 * deltaT;
-                labelHora.setText(Long.toString(time));
-                testLabel.setText(horaSys.format(dtf));
+                lblHora.setText(Long.toString(time));
+                lblTestHora.setText(horaSys.format(dtf));
             }
         }
     };
